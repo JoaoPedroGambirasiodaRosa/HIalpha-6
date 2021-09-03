@@ -5,7 +5,10 @@
  */
 package hardwareinventory;
 
+import HIClass.user;
+import HIClass.userDAO;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -336,6 +339,11 @@ public class cadUser extends javax.swing.JInternalFrame {
 
         btSave.setBackground(new java.awt.Color(0, 255, 0));
         btSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        btSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveActionPerformed(evt);
+            }
+        });
         jPanel1.add(btSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 220, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -469,6 +477,21 @@ boolean e = false;
     txtConfirm.setText(null);
     txtPhone.setText(null);
     }//GEN-LAST:event_btEraserActionPerformed
+
+    private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
+    user u = new user();
+        u.setName(txtName.getText());
+        u.setEmail(txtEmail.getText());
+        u.setPassword(txtPassword.getText());
+        u.setPhone(txtPhone.getText());
+
+        try {
+            userDAO udao = new userDAO();
+            udao.create(u);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+        }
+    }//GEN-LAST:event_btSaveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
