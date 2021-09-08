@@ -32,11 +32,14 @@ public class frMenu extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,7 +56,7 @@ public class frMenu extends javax.swing.JFrame {
         });
         fileMenu.add(jMenuItem1);
 
-        jMenuItem4.setText("Cadastro Categoria");
+        jMenuItem4.setText("Cadastro de Categorias");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -61,7 +64,15 @@ public class frMenu extends javax.swing.JFrame {
         });
         fileMenu.add(jMenuItem4);
 
-        jMenuItem3.setText("Cadastro de Sala");
+        jMenuItem5.setText("Cadastro de Marcas");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem5);
+
+        jMenuItem3.setText("Cadastro de Salas");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -83,7 +94,15 @@ public class frMenu extends javax.swing.JFrame {
         editMenu.setMnemonic('e');
         editMenu.setText("Consultas");
 
-        jMenuItem2.setText("Consultar Usuário");
+        jMenuItem7.setText("Consulta de Categorias");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem7);
+
+        jMenuItem2.setText("Consultar de Usuário");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -91,11 +110,23 @@ public class frMenu extends javax.swing.JFrame {
         });
         editMenu.add(jMenuItem2);
 
-        menuBar.add(editMenu);
+        jMenuItem6.setText("Consulta de Marcas");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem6);
 
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
+        jMenuItem8.setText("Consulta de Salas");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem8);
+
+        menuBar.add(editMenu);
 
         setJMenuBar(menuBar);
 
@@ -141,6 +172,30 @@ public class frMenu extends javax.swing.JFrame {
         cad.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        cadBrand cad = new cadBrand();
+        desktopPane.add(cad);
+        cad.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        conCategory cad = new conCategory();
+        desktopPane.add(cad);
+        cad.setVisible(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        conBrand cad = new conBrand();
+        desktopPane.add(cad);
+        cad.setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        conRoom cad = new conRoom();
+        desktopPane.add(cad);
+        cad.setVisible(true);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -181,11 +236,14 @@ public class frMenu extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 
