@@ -54,6 +54,7 @@ public class conBrand extends javax.swing.JInternalFrame {
         btEditar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 255));
+        setClosable(true);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

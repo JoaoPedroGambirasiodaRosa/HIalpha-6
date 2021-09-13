@@ -57,6 +57,8 @@ public class conRoom extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         txtLocal = new javax.swing.JTextField();
 
+        setClosable(true);
+
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 

@@ -7,7 +7,9 @@
 package hardwareinventory;
 
 import java.awt.Color;
-
+import javax.swing.JOptionPane;
+import HIClass.category;
+import HIClass.categoryDAO;
 /**
  *
  * @author s.lucas
@@ -38,6 +40,8 @@ public class cadCategory extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
+
+        setClosable(true);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
@@ -96,6 +100,11 @@ public class cadCategory extends javax.swing.JInternalFrame {
 
         jButton1.setBackground(new java.awt.Color(0, 255, 0));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Swis721 Cn BT", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -194,6 +203,18 @@ boolean a = false;
         txtCat.setForeground(Color.LIGHT_GRAY);
         a = false;}}
     }//GEN-LAST:event_txtCatMousePressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    category u = new category();
+        u.setCategory(txtCat.getText());
+      
+        try {
+            categoryDAO udao = new categoryDAO();
+            udao.create(u);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

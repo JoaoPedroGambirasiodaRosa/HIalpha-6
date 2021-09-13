@@ -61,6 +61,8 @@ public class conUser extends javax.swing.JInternalFrame {
         jPanel9 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
 
+        setClosable(true);
+
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 

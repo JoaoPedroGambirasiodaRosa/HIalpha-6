@@ -64,6 +64,8 @@ public class cadBrand extends javax.swing.JInternalFrame {
                 .addComponent(jLabel9))
         );
 
+        setClosable(true);
+
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setForeground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

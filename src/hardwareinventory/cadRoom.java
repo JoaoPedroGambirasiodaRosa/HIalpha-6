@@ -46,6 +46,7 @@ public class cadRoom extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        setClosable(true);
         setTitle("Cadastro de Salas");
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
