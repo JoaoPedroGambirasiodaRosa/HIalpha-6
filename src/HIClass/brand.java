@@ -11,17 +11,17 @@ package HIClass;
  */
 public class brand {
     
-  private int id; 
+  private int idPkBrand; 
   private String brand; 
+
+    public int getIdPkBrand() {
+        return idPkBrand;
+    }
+
+    public void setIdPkBrand(int idPkBrand) {
+        this.idPkBrand = idPkBrand;
+    }
     
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getBrand() {
         return brand;
     }
@@ -32,7 +32,7 @@ public class brand {
 
     @Override
     public String toString() {
-        return "brand{" + "id=" + id + ", brand=" + brand + '}';
+        return "brand{" + "idPkBrand=" + idPkBrand + ", brand=" + brand + '}';
     }
 
 }

@@ -11,12 +11,17 @@ package HIClass;
  */
 public class room {
 
-    public int getId() {
-        return id;
+   private int pkIdRoom;
+   private String room;
+   private String locall;
+   private String floor;
+
+    public int getPkIdRoom() {
+        return pkIdRoom;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPkIdRoom(int pkIdRoom) {
+        this.pkIdRoom = pkIdRoom;
     }
 
     public String getRoom() {
@@ -27,12 +32,12 @@ public class room {
         this.room = room;
     }
 
-    public String getLocal() {
-        return local;
+    public String getLocall() {
+        return locall;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
+    public void setLocall(String locall) {
+        this.locall = locall;
     }
 
     public String getFloor() {
@@ -45,12 +50,11 @@ public class room {
 
     @Override
     public String toString() {
-        return "room{" + "id=" + id + ", room=" + room + ", local=" + local + ", floor=" + floor + '}';
+        return "room{" + "pkIdRoom=" + pkIdRoom + ", room=" + room + ", locall=" + locall + ", floor=" + floor + '}';
     }
     
-    private int id;
-    private String room;
-    private String local;
-    private String floor;
+ }
+
     
-}
+    
+

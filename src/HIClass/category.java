@@ -11,12 +11,15 @@ package HIClass;
  */
 public class category {
 
-    public int getId() {
-        return id;
+private int idPkCat;
+private String category;
+
+    public int getIdPkCat() {
+        return idPkCat;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdPkCat(int idPkCat) {
+        this.idPkCat = idPkCat;
     }
 
     public String getCategory() {
@@ -25,13 +28,11 @@ public class category {
 
     public void setCategory(String category) {
         this.category = category;
+        
     }
-
     @Override
     public String toString() {
-        return "category{" + "id=" + id + ", category=" + category + '}';
+        return  this.getCategory();
     }
-
-  private int id;
-  private String category;   
 }
+   

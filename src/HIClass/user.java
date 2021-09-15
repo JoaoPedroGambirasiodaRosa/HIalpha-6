@@ -56,11 +56,4 @@ public class user {
     private String email;
     private String password;
     private String phone;
-
-    @Override
-    public String toString() {
-        return "user{" + "id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phone=" + phone + '}';
-    }
-
-    
 }

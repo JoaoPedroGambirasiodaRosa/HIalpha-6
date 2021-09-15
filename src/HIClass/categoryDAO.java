@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import HIClass.category;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author s.lucas
@@ -21,108 +23,148 @@ public class categoryDAO {
     
  Connection con;
         
-public void create(category u){
-        PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("INSERT INTO tbcategory (Category, VALUE (?)");
-            stmt.setString(1, u.getCategory());
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "A categoria "+u.getCategory()
-                    +" foi salva com Sucesso!!");
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt);
-        }
+ public categoryDAO() throws SQLException {
+        con = connectionFactory.getConnection();
     }
-     //listagem de usuarios na tabela do formulario   ---   R
-    
-    public ArrayList<category> read(){
+ 
+ public void create(category c) {
+
         PreparedStatement stmt = null;
-        ResultSet rs = null;
-        List<category> categorias = new ArrayList<category>();
+
         try {
-            stmt = con.prepareStatement("SELECT * FROM tbcategory");
-            rs = stmt.executeQuery();
-            while(rs.next()){
-                user usuario = new user();
-                categorias.setId(rs.getInt("idCategory"));
-                categorias.setCategory(rs.getString("Category"));
-                categorias.add(categorias);
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt, rs);
-        }
-        return (ArrayList<category>) categorias;
-    }
-    
-    public ArrayList<category> readPesq(String category){
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        List<category> categorias = new ArrayList<category>();
-        try {
-            stmt = con.prepareStatement("SELECT * FROM tbcategory WHERE nome LIKE ?");
-            stmt.setString(1, "%"+category+"%");
-            rs = stmt.executeQuery();
-            while(rs.next()){
-                user usuario = new user();
-                categorias.setId(rs.getInt("idCategory"));
-                categorias.setCategory(rs.getString("Category"));                
-                categorias.add(categorias);
-                
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt, rs);
-        }
-        return (ArrayList<category>) categorias;
-    }
-    
-    //ALTERAR O USUARIO NO BANCO DE DADOS   -- U 
-    public void update(user u){
-        PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("UPDATE tbcategory SET Category = ?,");
-            stmt.setString(1, u.getId());            
-            stmt.setInt   (2, u.getCategory());
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, " O usuario "+u.getName()
-                    +" foi modificado com Sucesso!!");
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt);
-        }
-    }
-    //excluir do banco de dados   --- D
-    public void delete(user u){
-            PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("DELETE FROM tbcategory WHERE id = ?");
-           
-            stmt.setInt   (1, u.getId());
+            stmt = con.prepareStatement("INSERT INTO tbcategoria (categoria) VALUES (?)");
+
+            stmt.setString(1, c.getCategory());
+          
             
-            if (JOptionPane.showConfirmDialog(null,"Exclusão", "Tem certeza que"
-                    + " deseja excluir o Usuario(a)"+u.getName(),
-                    JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-                JOptionPane.showMessageDialog(null, " o usuario(a) "+u.getName()
-                    +" foi excluído(a)com Sucesso!!");
-                stmt.executeUpdate();
-            }else{
-                JOptionPane.showMessageDialog(null, "A exclusão do Usuario(a) "+u.getCategory()
-                    +" Cancelado(a)com Sucesso!!");
-            }
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Categoria Salva com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
             connectionFactory.closeConnection(con, stmt);
         }
-    }  
+
+    }
+
+// MÉTODO CRIADO PARA EXCLUIR DO BANCO DE DADOS
+    public void delete(category c) {
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = con.prepareStatement("DELETE FROM tbcategoria WHERE pkidcategoria = ?");
+            stmt.setInt(1, c.getIdPkCat());
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Categoria Excluida com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + ex.getMessage());
+        } finally {
+            connectionFactory.closeConnection(con, stmt);
+        }
+
+    }
+
+//MÉTODO CRIADO PARA MODIFICAR NO BANCO DE DADOS
+    public void update(category c) {
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = con.prepareStatement("UPDATE tbcategoria SET categoria = ? WHERE pkidcategoria = ?");
+            stmt.setString(1, c.getCategory());
+            
+
+            stmt.setInt(2, c.getIdPkCat());
+
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Categoria Atualizada com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + ex.getMessage());
+        } finally {
+            connectionFactory.closeConnection(con, stmt);
+        }
+
+    }
+
+//MÉTODOS CRIADOS PARA FAZER PESQUISAS NO BANCO DE DADOS
+//EM ORDEM DE CADASTRO TODOS
+    public ArrayList<category> read() {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        List<category> categorias = new ArrayList<>();
+
+        try {
+            stmt = con.prepareStatement("SELECT * FROM tbcategoria");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                category categoria = new category();
+
+                categoria.setIdPkCat(rs.getInt("pkidcategoria"));
+                categoria.setCategory(rs.getString("categoria"));
+                
+                categorias.add(categoria);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(categoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connectionFactory.closeConnection(con, stmt, rs);
+        }
+
+        return (ArrayList<category>) categorias;
+
+    }
+
+//PESQUISA PELO LOGIN
+    public ArrayList<category> readForDesc(String desc, int opcao) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String sql = null; int tipo = 0;
+        if(opcao == 1){
+            sql = "SELECT * FROM tbcategory ORDER BY categoria ASC";
+        }else if(opcao == 2){
+             sql = "SELECT * FROM tbcategory ORDER BY categoria DESC";
+        }else {
+           sql = "SELECT * FROM tbcategory WHERE categoria LIKE ?";
+           tipo=1;
+        }
+        
+        
+        ArrayList<category> categorias = new ArrayList<>();
+
+        try {
+            stmt = con.prepareStatement(sql);
+          
+            if (tipo==1 || tipo ==2){
+                stmt.setString(1, "%" + desc + "%");                
+            }
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                category categoria = new category();
+
+                categoria.setIdPkCat(rs.getInt("pkidcategoria"));
+                categoria.setCategory(rs.getString("categoria"));
+                categorias.add(categoria);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(categoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connectionFactory.closeConnection(con, stmt, rs);
+        }
+        return categorias;
+    }
+
     
 }

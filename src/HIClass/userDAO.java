@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,152 +20,192 @@ import javax.swing.JOptionPane;
  * @author s.lucas
  */
 public class userDAO {
-    
-  Connection con;
-    
-    public userDAO() throws SQLException{
+
+    Connection con;
+
+    public userDAO() throws SQLException {
         con = connectionFactory.getConnection();
     }
-    
-    public boolean  checkLogin(String user, String pass_word){
-        
+
+//MÉTODO CRIADO PARA INSERIR USUÁRIO NO BANCO DE DADOS
+    public void create(user u) {
+
         PreparedStatement stmt = null;
-        ResultSet rs = null;
-        boolean check = false;
-        
+
         try {
-            stmt = con.prepareStatement("SELECT * FROM tbuser"
-                    + " where name = ? AND pass_word = ?");
-            stmt.setString(1, user);
-            stmt.setString(2, pass_word);
-            rs = stmt.executeQuery();
-            
-            if(rs.next()){
-                check = true;
-            }
-            
-            
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro: "+e.getMessage());
-        }
-        return check;
-    }
-    // SALVA O USUARIO NO BANCO DE DADOS   ---- C
-    public void create(user u){
-        PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("INSERT INTO tbuser (name,"
-                    + "email,pass_word,phone) VALUE (?,?,?,?)");
+            stmt = con.prepareStatement("INSERT INTO tbuser (name, email, pass_word, phone) VALUES (?,?,?,?)");
+
             stmt.setString(1, u.getName());
-            stmt.setString(2, u.getEmail());
-            stmt.setString(3, u.getPassword());
-            stmt.setString(4, u.getPhone());
+            stmt.setString(2, u.getPhone());
+            stmt.setString(3, u.getEmail());
+            stmt.setString(4, u.getPassword());
+
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Este usuário "+u.getName()
-                    +" foi salvo com Sucesso!!");
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
+
+            JOptionPane.showMessageDialog(null, "Usuário Salvo com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } finally {
             connectionFactory.closeConnection(con, stmt);
         }
+
     }
-     //listagem de usuarios na tabela do formulario   ---   R
-    
-    public ArrayList<user> read(){
+
+// MÉTODO CRIADO PARA EXCLUIR DO BANCO DE DADOS
+    public void delete(user u) {
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = con.prepareStatement("DELETE FROM tbuser WHERE pkidusuario = ?");
+            stmt.setInt(1, u.getId());
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + ex.getMessage());
+        } finally {
+            connectionFactory.closeConnection(con, stmt);
+        }
+
+    }
+
+//MÉTODO CRIADO PARA MODIFICAR NO BANCO DE DADOS
+    public void update(user u) {
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = con.prepareStatement("UPDATE tbuser SET name = ?, phone = ?, email = ?, pass_word = ? WHERE pkidusuario = ?");
+            stmt.setString(1, u.getName());
+            stmt.setString(2, u.getPhone());
+            stmt.setString(3, u.getEmail());
+            stmt.setString(4, u.getPassword());
+            stmt.setInt(5, u.getId());
+
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + ex);
+        } finally {
+            connectionFactory.closeConnection(con, stmt);
+        }
+
+    }
+
+//MÉTODOS CRIADOS PARA FAZER PESQUISAS NO BANCO DE DADOS
+//EM ORDEM DE CADASTRO TODOS
+    public ArrayList<user> read() {
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<user> usuarios = new ArrayList<user>();
+
+        List<user> usuarios = new ArrayList<>();
+
         try {
             stmt = con.prepareStatement("SELECT * FROM tbuser");
             rs = stmt.executeQuery();
-            while(rs.next()){
+
+            while (rs.next()) {
+
                 user usuario = new user();
-                usuario.setId(rs.getInt("id"));
+
+                usuario.setId(rs.getInt("pkidusuario"));
                 usuario.setName(rs.getString("name"));
+                usuario.setPhone(rs.getString("phone"));
                 usuario.setEmail(rs.getString("email"));
                 usuario.setPassword(rs.getString("pass_word"));
-                usuario.setPhone(rs.getString("phone"));
+
                 usuarios.add(usuario);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Erro:"+e.getMessage());
-        } finally{
+
+        } catch (SQLException ex) {
+            Logger.getLogger(userDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             connectionFactory.closeConnection(con, stmt, rs);
         }
+
         return (ArrayList<user>) usuarios;
+
     }
-    
-    public ArrayList<user> readPesq(String nome){
+
+//PESQUISA PELO LOGIN
+    public List<user> readForDesc(String desc, int opcao) {
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<user> usuarios = new ArrayList<user>();
+        String sql = null; int tipo = 0;
+        if(opcao == 1){
+            sql = "SELECT * FROM tbuser ORDER BY nome ASC";
+        }else if(opcao == 2){
+             sql = "SELECT * FROM tbuser ORDER BY nome DESC";
+        }else if(opcao == 3){
+           sql = "SELECT * FROM tbuser WHERE nome LIKE ?";
+           tipo=1;
+        }else{
+              sql = "SELECT * FROM tbuser WHERE email LIKE ?";
+              tipo = 2;
+        }
+        
+        
+        ArrayList<user> usuarios = new ArrayList<>();
+
         try {
-            stmt = con.prepareStatement("SELECT * FROM tbusuario WHERE nome LIKE ?");
-            stmt.setString(1, "%"+nome+"%");
+            stmt = con.prepareStatement(sql);
+          
+            if (tipo==1 || tipo ==2){
+                stmt.setString(1, "%" + desc + "%");                
+            }
             rs = stmt.executeQuery();
-            while(rs.next()){
+
+            while (rs.next()) {
+
                 user usuario = new user();
-                usuario.setId(rs.getInt("id"));
-                usuario.setName(rs.getString("name"));
+
+                usuario.setId(rs.getInt("pkidusuario"));
+                usuario.setName(rs.getString("nome"));
                 usuario.setEmail(rs.getString("email"));
-                usuario.setPassword(rs.getString("pass_word"));
-                usuario.setPhone(rs.getString("phone"));
+                usuario.setPhone(rs.getString("fone"));
+                usuario.setPassword(rs.getString("Pass_Word"));
                 usuarios.add(usuario);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Erro:"+e.getMessage());
-        } finally{
+
+        } catch (SQLException ex) {
+            Logger.getLogger(userDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             connectionFactory.closeConnection(con, stmt, rs);
         }
-        return (ArrayList<user>) usuarios;
+        return usuarios;
     }
-    
-    //ALTERAR O USUARIO NO BANCO DE DADOS   -- U 
-    public void update(user u){
+
+    public boolean checkLogin(String email, String senha) {
+
         PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        boolean check = false;
+
         try {
-            stmt = con.prepareStatement("UPDATE tbuser SET name = ?,"
-                    + "email = ?, pass_word = ? ,phone = ? WHERE id = ?");
-            stmt.setString(1, u.getName());
-            stmt.setString(2, u.getEmail());
-            stmt.setString(3, u.getPassword());
-            stmt.setString(4, u.getPhone());
-            stmt.setInt   (5, u.getId());
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, " O usuario "+u.getName()
-                    +" foi modificado com Sucesso!!");
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt);
-        }
-    }
-    //excluir do banco de dados   --- D
-    public void delete(user u){
-            PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("DELETE FROM tbuser WHERE id = ?");
-           
-            stmt.setInt   (1, u.getId());
-            
-            if (JOptionPane.showConfirmDialog(null,"Exclusão", "Tem certeza que"
-                    + " deseja excluir o Usuario(a)"+u.getName(),
-                    JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-                JOptionPane.showMessageDialog(null, " o usuario(a) "+u.getName()
-                    +" foi excluído(a)com Sucesso!!");
-                stmt.executeUpdate();
-            }else{
-                JOptionPane.showMessageDialog(null, "A exclusão do Usuario(a) "+u.getName()
-                    +" Cancelado(a)com Sucesso!!");
+
+            stmt = con.prepareStatement("SELECT * FROM tbusuario WHERE email = ? and senha = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, senha);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                check = true;
             }
-   
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro:"+e.getMessage());
-        } finally{
-            connectionFactory.closeConnection(con, stmt);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(userDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connectionFactory.closeConnection(con, stmt, rs);
         }
-    }  
-    
+
+        return check;
+
+    }
 }
