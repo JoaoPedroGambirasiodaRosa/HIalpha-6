@@ -8,6 +8,13 @@ package hardwareinventory;
 import java.awt.Color;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import HIClass.hardwareDAO;
+import HIClass.hardware;
+import HIClass.user;
+import HIClass.brand;
+import HIClass.category;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -186,6 +193,11 @@ public class cadHardware extends javax.swing.JInternalFrame {
 
         jButton2.setBackground(new java.awt.Color(0, 204, 0));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 200, -1, -1));
 
         txtPrice.setEditable(false);
@@ -324,6 +336,28 @@ if(e==false){
         txtCharacteristics.setForeground(Color.LIGHT_GRAY);
         e = false;}}
     }//GEN-LAST:event_txtCharacteristicsMousePressed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        hardwareDAO dao = null;
+
+        try {
+            dao = new hardwareDAO();
+            hardware h = new hardware();
+            category cat = new category();
+            brand m = new brand();
+            h.setName(txtHardware.getText());
+            h.setModel(txtModel.getText());
+            h.setStats((String) boxStats.getSelectedItem());
+            h.setDatee(txtDate.getText());
+            h.setPrice(Double.parseDouble(txtPrice.getText()));
+            h.setCharacteristics(txtCharacteristics.getText());
+            h.setCategory((category) boxCategory.getSelectedItem());
+            h.setBrand((brand) boxBrand.getSelectedItem());
+            dao.create(h);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro:" + ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

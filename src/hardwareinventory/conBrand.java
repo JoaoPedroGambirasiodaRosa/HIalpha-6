@@ -6,9 +6,16 @@
 package hardwareinventory;
 
 import HIClass.brand;
+import HIClass.room;
+import HIClass.user;
 import HIClass.brandDAO;
-import hardwareinventory.cadBrand;
+import HIClass.roomDAO;
+import HIClass.userDAO;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author s.lucas
@@ -20,8 +27,10 @@ public class conBrand extends javax.swing.JInternalFrame {
      */
     public conBrand() {
         initComponents();
-    }
-
+        
+        this.setLocationRelativeTo(null);
+        readJtable();
+    } 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +46,7 @@ public class conBrand extends javax.swing.JInternalFrame {
         jPanel8 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabela = new javax.swing.JTable();
+        brandTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jRadioButton2 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
@@ -50,7 +59,7 @@ public class conBrand extends javax.swing.JInternalFrame {
         txtID = new javax.swing.JTextField();
         txtBrand = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btDelet = new javax.swing.JButton();
         btEditar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 255));
@@ -106,8 +115,8 @@ public class conBrand extends javax.swing.JInternalFrame {
 
         jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, -1));
 
-        tabela.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        tabela.setModel(new javax.swing.table.DefaultTableModel(
+        brandTable.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        brandTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -118,12 +127,12 @@ public class conBrand extends javax.swing.JInternalFrame {
                 "ID:", "MARCA:"
             }
         ));
-        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+        brandTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelaMouseClicked(evt);
+                brandTableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tabela);
+        jScrollPane1.setViewportView(brandTable);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 104, 530, 122));
 
@@ -163,6 +172,11 @@ public class conBrand extends javax.swing.JInternalFrame {
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(241, 56, 230, 37));
 
         btSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/search.png"))); // NOI18N
+        btSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSearchActionPerformed(evt);
+            }
+        });
         jPanel1.add(btSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(484, 56, 62, 37));
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 237, 536, 10));
 
@@ -191,12 +205,17 @@ public class conBrand extends javax.swing.JInternalFrame {
         jLabel3.setText("MARCA:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 313, -1, -1));
 
-        jButton3.setBackground(new java.awt.Color(255, 0, 0));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("EXCLUIR");
-        jButton3.setMaximumSize(new java.awt.Dimension(79, 23));
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
+        btDelet.setBackground(new java.awt.Color(255, 0, 0));
+        btDelet.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btDelet.setForeground(new java.awt.Color(255, 255, 255));
+        btDelet.setText("EXCLUIR");
+        btDelet.setMaximumSize(new java.awt.Dimension(79, 23));
+        btDelet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDeletActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btDelet, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
 
         btEditar.setBackground(new java.awt.Color(255, 102, 0));
         btEditar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -222,38 +241,101 @@ public class conBrand extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-public static int i = -1;
-static cadBrand todo = new cadBrand();
-    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
-        if(tabela.getSelectedRow() != -1){
-            i = tabela.getSelectedRow();
-            JOptionPane.showMessageDialog(null, i);
-            txtID.setText(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
-            txtBrand.setText(tabela.getValueAt(tabela.getSelectedRow(), 1).toString());
+  public void readJTable() throws SQLException {
+        //Puxa do banco os registros e coloca na tabela gerada
+        DefaultTableModel modelo = (DefaultTableModel) brandTable.getModel();
+        modelo.setNumRows(0);
+        brandDAO mDao = new brandDAO();
+        for (brand m : mDao.read()) {
+            modelo.addRow(new Object[]{
+                m.getIdPkBrand(),
+                m.getBrand()
+            });
         }
-    }//GEN-LAST:event_tabelaMouseClicked
+    }
+    
+    public static int i = -1;
+    static cadBrand todo = new cadBrand();
+    private void brandTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_brandTableMouseClicked
+        if (brandTable.getSelectedRow() != -1) {
+
+            txtID.setText(brandTable.getValueAt(brandTable.getSelectedRow(), 0).toString());
+            txtBrand.setText(brandTable.getValueAt(brandTable.getSelectedRow(), 1).toString());
+                  }
+    }//GEN-LAST:event_brandTableMouseClicked
 
     private void txtBrandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBrandActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBrandActionPerformed
 
     private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
-        if(i!=-1){
+        if (brandTable.getSelectedRow() != -1) {
 
-            brand usu = new brand();
-            usu.setId(Integer.parseInt(txtID.getText()));
-            usu.setBrand(txtBrand.getText());
+            brand m = new brand();
+            brandDAO dao = null;
+            try {
+                dao = new brandDAO();
+            } catch (SQLException ex) {
+                Logger.getLogger(conBrand.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        }else{
-            JOptionPane.showMessageDialog(null, "Selecione um registro na tabela");
+            m.setBrand(txtBrand.getText());
+
+            
+            m.setIdPkBrand((int) brandTable.getValueAt(brandTable.getSelectedRow(), 0));
+            dao.update(m);
+
+            txtID.setText("");
+            txtBrand.setText("");
+            
+            try {
+                readJTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(conBrand.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_btEditarActionPerformed
+    
+    private void btDeletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeletActionPerformed
+        if (brandTable.getSelectedRow() != -1) {
+
+            brand m = new brand();
+            brandDAO dao = null;
+            try {
+                dao = new brandDAO();
+            } catch (SQLException ex) {
+                Logger.getLogger(conBrand.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            m.setIdPkBrand((int) brandTable.getValueAt(brandTable.getSelectedRow(), 0));
+
+            dao.delete(m);
+
+            txtID.setText("");
+            txtBrand.setText("");
+            
+            try {
+                readJTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(conBrand.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma marca para excluir.");
+        }
+    }//GEN-LAST:event_btDeletActionPerformed
+
+    private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
+
+    }//GEN-LAST:event_btSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable brandTable;
+    private javax.swing.JButton btDelet;
     private javax.swing.JButton btEditar;
     private javax.swing.JButton btSearch;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -269,8 +351,15 @@ static cadBrand todo = new cadBrand();
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTable tabela;
     private javax.swing.JTextField txtBrand;
     private javax.swing.JTextField txtID;
     // End of variables declaration//GEN-END:variables
+
+    private void setLocationRelativeTo(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void readJtable() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

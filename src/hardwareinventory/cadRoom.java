@@ -6,7 +6,10 @@
 package hardwareinventory;
 
 import java.awt.Color;
-
+import HIClass.room;
+import HIClass.roomDAO;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author s.lucas
@@ -37,13 +40,13 @@ public class cadRoom extends javax.swing.JInternalFrame {
         txtRoom = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        txtPlace = new javax.swing.JTextField();
+        txtLocall = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtFloor = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btSave = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setClosable(true);
@@ -123,13 +126,13 @@ public class cadRoom extends javax.swing.JInternalFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        txtPlace.setEditable(false);
-        txtPlace.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtPlace.setForeground(new java.awt.Color(153, 153, 153));
-        txtPlace.setText("Insira um Local:");
-        txtPlace.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtLocall.setEditable(false);
+        txtLocall.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtLocall.setForeground(new java.awt.Color(153, 153, 153));
+        txtLocall.setText("Insira um Local:");
+        txtLocall.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtPlaceMousePressed(evt);
+                txtLocallMousePressed(evt);
             }
         });
 
@@ -184,8 +187,13 @@ public class cadRoom extends javax.swing.JInternalFrame {
                 .addComponent(jLabel8))
         );
 
-        jButton1.setBackground(new java.awt.Color(0, 255, 51));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        btSave.setBackground(new java.awt.Color(0, 255, 51));
+        btSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        btSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(255, 153, 51));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eraser.png"))); // NOI18N
@@ -211,7 +219,7 @@ public class cadRoom extends javax.swing.JInternalFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtPlace))
+                                .addComponent(txtLocall))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -224,7 +232,7 @@ public class cadRoom extends javax.swing.JInternalFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(btSave)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -237,7 +245,7 @@ public class cadRoom extends javax.swing.JInternalFrame {
                     .addComponent(txtRoom))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtPlace)
+                    .addComponent(txtLocall)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,7 +253,7 @@ public class cadRoom extends javax.swing.JInternalFrame {
                     .addComponent(txtFloor, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(btSave)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -270,7 +278,7 @@ boolean c = false;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     txtRoom.setText(null);
     txtFloor.setText(null);
-    txtPlace.setText(null);
+    txtLocall.setText(null);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRoomActionPerformed
@@ -289,17 +297,17 @@ if(a==false){
         a = false;}}
     }//GEN-LAST:event_txtRoomMousePressed
 
-    private void txtPlaceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPlaceMousePressed
+    private void txtLocallMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtLocallMousePressed
     if(b==false){ 
-        txtPlace.setText(null);
-        txtPlace.setEditable(true);
-        txtPlace.setForeground(Color.black);
+        txtLocall.setText(null);
+        txtLocall.setEditable(true);
+        txtLocall.setForeground(Color.black);
         b = true;
-      }else{if(txtPlace.getText().equals("")&& txtPlace.isFocusOwner()==false){txtPlace.setText("Insira um Local:");
-        txtPlace.setEditable(false);
-        txtPlace.setForeground(Color.LIGHT_GRAY);
+      }else{if(txtLocall.getText().equals("")&& txtLocall.isFocusOwner()==false){txtLocall.setText("Insira um Local:");
+        txtLocall.setEditable(false);
+        txtLocall.setForeground(Color.LIGHT_GRAY);
         b = false;}} 
-    }//GEN-LAST:event_txtPlaceMousePressed
+    }//GEN-LAST:event_txtLocallMousePressed
 
     private void txtFloorMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtFloorMousePressed
         if(c==false){ 
@@ -313,9 +321,27 @@ if(a==false){
         c = false;}} 
     }//GEN-LAST:event_txtFloorMousePressed
 
+    private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
+roomDAO dao = null;
+
+        try {
+            dao = new roomDAO();
+            room s = new room();
+            s.setRoom(txtRoom.getText());
+            s.setFloor(txtFloor.getText());
+            s.setLocall(txtLocall.getText());
+            
+                dao.create(s);
+            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } 
+    }//GEN-LAST:event_btSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btSave;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -329,7 +355,7 @@ if(a==false){
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField txtFloor;
-    private javax.swing.JTextField txtPlace;
+    private javax.swing.JTextField txtLocall;
     private javax.swing.JTextField txtRoom;
     // End of variables declaration//GEN-END:variables
 }

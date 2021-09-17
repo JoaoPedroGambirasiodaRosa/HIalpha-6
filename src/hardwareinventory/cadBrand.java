@@ -6,6 +6,10 @@
 package hardwareinventory;
 
 import java.awt.Color;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import HIClass.brandDAO;
+import HIClass.brand;
 
 /**
  *
@@ -153,6 +157,11 @@ public class cadBrand extends javax.swing.JInternalFrame {
 
         jButton1.setBackground(new java.awt.Color(0, 204, 51));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,6 +189,22 @@ boolean a = false;
         txtBrand.setForeground(Color.LIGHT_GRAY);
         a = false;}}
     }//GEN-LAST:event_txtBrandMousePressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        brandDAO dao = null;
+
+        try {
+            dao = new brandDAO();
+            brand c = new brand();
+            c.setBrand(txtBrand.getText());
+            
+                dao.create(c);
+            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

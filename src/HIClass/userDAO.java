@@ -179,7 +179,7 @@ public class userDAO {
         return usuarios;
     }
 
-    public boolean checkLogin(String email, String senha) {
+    public boolean checkLogin(String email, String pass_word) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -188,9 +188,9 @@ public class userDAO {
 
         try {
 
-            stmt = con.prepareStatement("SELECT * FROM tbusuario WHERE email = ? and senha = ?");
+            stmt = con.prepareStatement("SELECT * FROM tbuser WHERE email = ? and pass_word = ?");
             stmt.setString(1, email);
-            stmt.setString(2, senha);
+            stmt.setString(2, pass_word);
 
             rs = stmt.executeQuery();
 

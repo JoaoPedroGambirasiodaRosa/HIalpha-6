@@ -32,7 +32,7 @@ public class categoryDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO tbcategoria (categoria) VALUES (?)");
+            stmt = con.prepareStatement("INSERT INTO tbcategory (category) VALUES (?)");
 
             stmt.setString(1, c.getCategory());
           
@@ -54,7 +54,7 @@ public class categoryDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM tbcategoria WHERE pkidcategoria = ?");
+            stmt = con.prepareStatement("DELETE FROM tbcategory WHERE pkidcategory = ?");
             stmt.setInt(1, c.getIdPkCat());
             stmt.executeUpdate();
 
@@ -73,7 +73,7 @@ public class categoryDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE tbcategoria SET categoria = ? WHERE pkidcategoria = ?");
+            stmt = con.prepareStatement("UPDATE tbcategory SET category = ? WHERE pkidcategory = ?");
             stmt.setString(1, c.getCategory());
             
 
@@ -100,15 +100,15 @@ public class categoryDAO {
         List<category> categorias = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM tbcategoria");
+            stmt = con.prepareStatement("SELECT * FROM tbcategory");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
 
                 category categoria = new category();
 
-                categoria.setIdPkCat(rs.getInt("pkidcategoria"));
-                categoria.setCategory(rs.getString("categoria"));
+                categoria.setIdPkCat(rs.getInt("pkidcategory"));
+                categoria.setCategory(rs.getString("category"));
                 
                 categorias.add(categoria);
             }
@@ -153,8 +153,8 @@ public class categoryDAO {
 
                 category categoria = new category();
 
-                categoria.setIdPkCat(rs.getInt("pkidcategoria"));
-                categoria.setCategory(rs.getString("categoria"));
+                categoria.setIdPkCat(rs.getInt("pkidcategory"));
+                categoria.setCategory(rs.getString("category"));
                 categorias.add(categoria);
             }
 

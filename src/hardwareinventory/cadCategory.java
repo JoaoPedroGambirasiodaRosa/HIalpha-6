@@ -10,6 +10,9 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import HIClass.category;
 import HIClass.categoryDAO;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author s.lucas
@@ -36,7 +39,7 @@ public class cadCategory extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtCat = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btSave = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -98,11 +101,11 @@ public class cadCategory extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(0, 255, 0));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btSave.setBackground(new java.awt.Color(0, 255, 0));
+        btSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        btSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btSaveActionPerformed(evt);
             }
         });
 
@@ -149,7 +152,7 @@ public class cadCategory extends javax.swing.JInternalFrame {
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addComponent(btSave)
                         .addGap(94, 94, 94)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -167,7 +170,7 @@ public class cadCategory extends javax.swing.JInternalFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtCat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btSave)
                 .addGap(16, 16, 16)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
@@ -204,21 +207,25 @@ boolean a = false;
         a = false;}}
     }//GEN-LAST:event_txtCatMousePressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    category u = new category();
-        u.setCategory(txtCat.getText());
-      
+    private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
+        categoryDAO dao = null;
+
         try {
-            categoryDAO udao = new categoryDAO();
-            udao.create(u);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+            dao = new categoryDAO();
+            category c = new category();
+            c.setCategory(txtCat.getText());
+            
+                dao.create(c);
+            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btSaveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btSave;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -229,5 +236,9 @@ boolean a = false;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField txtCat;
     // End of variables declaration//GEN-END:variables
+
+    private void readJTable() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
